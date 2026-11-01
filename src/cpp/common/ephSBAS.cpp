@@ -10,6 +10,15 @@
 
 bool satPosSBAS(Trace& trace, GTime time, GTime teph, SatPos& satPos, Navigation& nav)
 {
+    if (satPos.satNav_ptr == nullptr)
+    {
+        // eg. a satellite excluded via satellite_options, see satPosSSR()
+        satPos.ephPosValid = false;
+        satPos.ephClkValid = false;
+
+        return false;
+    }
+
     SBASMaps& sbsMaps     = satPos.satNav_ptr->currentSBAS;
     SatSys&   Sat         = satPos.Sat;
     Vector3d& rSat        = satPos.rSatApc;
