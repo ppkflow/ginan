@@ -267,6 +267,17 @@ bool ssrClkDelta(
  */
 bool satPosSSR(Trace& trace, GTime time, GTime teph, SatPos& satPos, Navigation& nav)
 {
+    if (satPos.satNav_ptr == nullptr)
+    {
+        // eg. a satellite excluded via satellite_options: the preprocessor skips it before
+        // connecting its navigation data, but spp() still requests its position
+        satPos.ephPosValid    = false;
+        satPos.ephClkValid    = false;
+        satPos.failureSSRFail = true;
+
+        return false;
+    }
+
     SSRMaps&  ssrMaps     = satPos.satNav_ptr->receivedSSR;
     SatSys&   Sat         = satPos.Sat;
     Vector3d& rSat        = satPos.rSatCom;
